@@ -25,6 +25,10 @@ export class FavoritesController {
     @Param('id', ParseUUIDPipe) id: string,
   ) {
     this.favoritesService.add(entityType, id);
+
+    return `${
+      entityType.charAt(0).toUpperCase() + entityType.slice(1)
+    } successfully added to favorites`;
   }
 
   @Delete(':entityType/:id')
