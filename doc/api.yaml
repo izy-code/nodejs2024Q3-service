@@ -28,7 +28,7 @@ components:
           example: 1655000000
         updatedAt:
           type: number
-          example: 1655000001
+          example: 1655000000
       required:
         - id
         - login
