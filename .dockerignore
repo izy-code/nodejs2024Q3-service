@@ -1,0 +1,9 @@
+node_modules
+postgres
+.git
+.gitignore
+Dockerfile
+compose.yaml
+README.md
+.env
+.env.example

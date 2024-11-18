@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: izydock/hls-postgres:latest
+    # build:
+    #   context: .
+    #   dockerfile: ./postgres/Dockerfile
+    command: ' -p ${POSTGRES_PORT} -c logging_collector=on -c log_statement=all -c log_directory=logs'
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - postgres-logs:/var/log/postgresql
+    networks:
+      - hls-network
+
+  backend:
+    image: izydock/hls-backend:latest
+    depends_on:
+      - postgres
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+    networks:
+      - hls-network
+
+volumes:
+  postgres-data:
+  postgres-logs:
+
+networks:
+  hls-network:
+    driver: bridge
