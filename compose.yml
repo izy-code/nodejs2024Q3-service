@@ -24,7 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - ${BACKEND_PORT}:${BACKEND_PORT}
+      - ${PORT}:${PORT}
     restart: on-failure
     env_file:
       - .env

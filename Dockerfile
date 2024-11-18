@@ -22,9 +22,10 @@ RUN npm ci --only=production
 
 COPY --from=build /app/tsconfig*.json ./
 COPY --from=build /app/doc/api.yaml ./doc/api.yaml
+COPY --from=build /app/.env ./
 COPY --from=build /app/dist ./dist/
 
-ENV BACKEND_PORT=4000
-EXPOSE $BACKEND_PORT
+ENV PORT=4000
+EXPOSE $PORT
 
 CMD ["npm", "run", "start:dev:migrate"]

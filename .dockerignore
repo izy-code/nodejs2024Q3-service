@@ -5,5 +5,3 @@ postgres
 Dockerfile
 compose.yaml
 README.md
-.env
-.env.example
