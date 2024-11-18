@@ -11,8 +11,7 @@ services:
     env_file:
       - .env
     volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - postgres-logs:/var/lib/postgresql/data/logs
+      - postgres-data-and-logs:/var/lib/postgresql/data
     networks:
       - hls-network
 
@@ -34,8 +33,7 @@ services:
       - hls-network
 
 volumes:
-  postgres-data:
-  postgres-logs:
+  postgres-data-and-logs:
 
 networks:
   hls-network:

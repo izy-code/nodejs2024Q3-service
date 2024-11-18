@@ -91,4 +91,4 @@ npm run format
 
 ## Docker volumes
 
-Database files and logs are stored in `postgres-data` and `postgres-logs` volumes
+Database files and logs are stored in `postgres-data-and-logs` volume. Logs could be find inside `logs` folder in that volume.
