@@ -15,16 +15,16 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  findAll() {
-    return this.favoritesService.findAll();
+  async findAll() {
+    return await this.favoritesService.findAll();
   }
 
   @Post(':entityType/:id')
-  addToFavorites(
+  async addToFavorites(
     @Param('entityType') entityType: FavEntityType,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    this.favoritesService.add(entityType, id);
+    await this.favoritesService.add(entityType, id);
 
     return `${
       entityType.charAt(0).toUpperCase() + entityType.slice(1)
@@ -33,10 +33,10 @@ export class FavoritesController {
 
   @Delete(':entityType/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeFromFavorites(
+  async removeFromFavorites(
     @Param('entityType') entityType: FavEntityType,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    this.favoritesService.remove(entityType, id);
+    await this.favoritesService.remove(entityType, id);
   }
 }
