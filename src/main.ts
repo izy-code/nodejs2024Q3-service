@@ -7,6 +7,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import * as YAML from 'yaml';
+import { LoggerService } from './logger/logger.service';
 
 const port = process.env.PORT || DEFAULT_PORT;
 
@@ -18,8 +19,10 @@ async function initSwagger(app: INestApplication) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const loggerService = app.get(LoggerService);
 
+  app.useLogger(loggerService);
   app.useGlobalPipes(new ValidationPipe());
 
   await initSwagger(app);
