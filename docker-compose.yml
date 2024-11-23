@@ -29,6 +29,7 @@ services:
       - .env
     volumes:
       - ./src:/app/src
+      - ./logs:/app/logs
     networks:
       - hls-network
 
