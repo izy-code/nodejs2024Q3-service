@@ -3,7 +3,7 @@ import { mkdirSync, appendFileSync, statSync, renameSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 
 const BYTES_IN_KB = 1024;
-const DEFAULT_MAX_FILE_SIZE = 10 * BYTES_IN_KB;
+const DEFAULT_MAX_FILE_SIZE = 8 * BYTES_IN_KB;
 const DEFAULT_LOG_LEVEL = 'log';
 const LOGS_DIR_PATH = '../../logs';
 const COMMON_LOG_FILE_NAME = 'common.log';
@@ -43,6 +43,7 @@ export class LoggerService extends ConsoleLogger {
     );
 
     this.createLogMethods();
+    this.addErrorHandlers();
   }
 
   private isEnabledLevel(level: LogLevel): boolean {
@@ -96,6 +97,20 @@ export class LoggerService extends ConsoleLogger {
       this[level] = (message: any, trace?: string) => {
         this.logWithLevel(level, message, trace);
       };
+    });
+  }
+
+  private addErrorHandlers() {
+    process.on('uncaughtException', (error: Error) => {
+      this.error(`[Uncaught Exception] ${error.message}`, error.stack);
+
+      process.exit(1);
+    });
+
+    process.on('unhandledRejection', (error: Error) => {
+      this.error(`[Unhandled Rejection] ${error.message}`, error.stack);
+
+      process.exit(1);
     });
   }
 }
