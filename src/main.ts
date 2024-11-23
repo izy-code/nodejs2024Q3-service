@@ -8,6 +8,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import * as YAML from 'yaml';
 import { LoggerService } from './logger/logger.service';
+import { LoggerHttpInterceptor } from './interceptors/logger.interceptor';
 
 const port = process.env.PORT || DEFAULT_PORT;
 
@@ -23,6 +24,7 @@ async function bootstrap() {
   const loggerService = app.get(LoggerService);
 
   app.useLogger(loggerService);
+  app.useGlobalInterceptors(new LoggerHttpInterceptor(loggerService));
   app.useGlobalPipes(new ValidationPipe());
 
   await initSwagger(app);
