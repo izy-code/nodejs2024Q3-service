@@ -57,16 +57,28 @@ Before testing make sure that Docker doesn't have any other running containers a
 
 Once the application is running, open a new terminal and enter:
 
-To run all tests without authorization
+- To run all tests without authorization
 
 ```
 npm test
 ```
 
-To run only one of all test suites
+- To run only one of all test suites
 
 ```
 npm test -- <path to suite>
+```
+
+- To run all test with authorization
+
+```
+npm run test:auth
+```
+
+- To run only specific test suite with authorization
+
+```
+npm run test:auth -- <path to suite>
 ```
 
 ## Vulnerabilities scanning
