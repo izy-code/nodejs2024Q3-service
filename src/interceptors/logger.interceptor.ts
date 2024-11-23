@@ -16,19 +16,19 @@ export class LoggerHttpInterceptor implements NestInterceptor {
     const httpContext = context.switchToHttp();
     const request = httpContext.getRequest();
     const response = httpContext.getResponse();
-    const { url, body, query } = request;
+    const { url, body, query, method } = request;
 
     return next.handle().pipe(
       tap((data) => {
+        const bodyPart = `body: ${JSON.stringify(body)}`;
+        const queryPart = `query: ${JSON.stringify(query)}`;
+        const dataPart = data ? ` data: ${JSON.stringify(data)}` : '';
+
         this.loggerService.log(
-          `[Request] url: ${url}, body: ${JSON.stringify(
-            body,
-          )}, query: ${JSON.stringify(query)}`,
+          `[Request] ${method}, url: ${url}, ${bodyPart}, ${queryPart}`,
         );
         this.loggerService.log(
-          `[Response] statusCode: ${
-            response.statusCode
-          }, data: ${JSON.stringify(data)}`,
+          `[Response] statusCode: ${response.statusCode}, ${dataPart}`,
         );
       }),
     );
