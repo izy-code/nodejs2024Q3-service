@@ -1,10 +1,19 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Public } from 'src/common/decorators';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { RefreshDto } from './dto/refresh.dto';
 
 @Controller('/auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
@@ -22,7 +31,6 @@ export class AuthController {
     return this.authService.signUp(createUserDto.login, createUserDto.password);
   }
 
-  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
   refresh(@Body() refreshDto: RefreshDto) {

@@ -3,6 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
@@ -27,20 +28,25 @@ export class AuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const isRefreshEndpoint = request.url.includes('/auth/refresh');
+    const token = isRefreshEndpoint
+      ? request.body?.refreshToken
+      : this.extractTokenFromHeader(request);
 
     if (!token) {
       throw new UnauthorizedException('Token not found');
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: process.env.JWT_SECRET,
-      });
+      const secret = isRefreshEndpoint
+        ? process.env.JWT_SECRET_REFRESH_KEY
+        : process.env.JWT_SECRET;
+
+      const payload = await this.jwtService.verifyAsync(token, { secret });
 
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException('Invalid token');
+      throw new ForbiddenException('Invalid or expired token');
     }
 
     return true;
