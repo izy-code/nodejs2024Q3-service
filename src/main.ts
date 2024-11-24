@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DEFAULT_PORT, SWAGGER_ENDPOINT } from './common/constants';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
@@ -10,6 +10,8 @@ import * as YAML from 'yaml';
 import { LoggerService } from './logger/logger.service';
 import { LoggerHttpInterceptor } from './interceptors/logger.interceptor';
 import { CatchEverythingFilter } from './filters/exceptions.filter';
+import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from './auth/auth.guard';
 
 const port = process.env.PORT || DEFAULT_PORT;
 
@@ -25,12 +27,15 @@ async function bootstrap() {
 
   const loggerService = app.get(LoggerService);
   const httpAdapterHost = app.get(HttpAdapterHost);
+  const jwtService = app.get(JwtService);
+  const reflector = app.get(Reflector);
 
   app.useLogger(loggerService);
   app.useGlobalInterceptors(new LoggerHttpInterceptor(loggerService));
   app.useGlobalFilters(
     new CatchEverythingFilter(httpAdapterHost, loggerService),
   );
+  app.useGlobalGuards(new AuthGuard(jwtService, reflector));
   app.useGlobalPipes(new ValidationPipe());
 
   await initSwagger(app);
