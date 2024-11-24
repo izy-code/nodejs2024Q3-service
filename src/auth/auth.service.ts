@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { compare, hash } from 'bcrypt';
+import { compare } from 'bcrypt';
 import { RefreshResponse, SignInResponse, TokenPayload } from './types';
 
 @Injectable()
@@ -36,12 +36,7 @@ export class AuthService {
   }
 
   async signUp(login: string, password: string) {
-    const hashedPassword = await hash(password, Number(process.env.CRYPT_SALT));
-
-    return await this.userService.create({
-      login,
-      password: hashedPassword,
-    });
+    return await this.userService.create({ login, password });
   }
 
   async refresh(refreshToken: string): Promise<RefreshResponse> {
