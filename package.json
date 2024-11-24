@@ -23,7 +23,7 @@
     "start:dev:migrate": "npx prisma migrate deploy && npm run start:dev",
     "docker:up": "docker compose up",
     "docker:down": "docker compose down",
-    "docker:scan": "docker scout cves izydock/hls-backend:latest && docker scout cves izydock/hls-postgres:latest"
+    "docker:scan": "docker scout cves izydock/hls-backend-with-auth:latest && docker scout cves izydock/hls-postgres:latest"
   },
   "dependencies": {
     "@nestjs/cli": "^10.4.8",
