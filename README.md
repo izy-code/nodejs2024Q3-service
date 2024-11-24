@@ -90,6 +90,12 @@ npm run test:auth
 npm run test:auth -- <path to suite>
 ```
 
+- To run `auth/refresh` endpoint tests
+
+```
+npm run test:refresh
+```
+
 ## Vulnerabilities scanning
 
 Before scanning you should login into Docker account in Docker Desktop.
