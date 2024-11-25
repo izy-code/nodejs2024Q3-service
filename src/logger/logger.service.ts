@@ -62,6 +62,13 @@ export class LoggerService extends ConsoleLogger {
 
     mkdirSync(dirname(logFilePath), { recursive: true });
 
+    if (message.includes('"password":')) {
+      message = message.replace(
+        /"password":"[^"]+"/,
+        '"password":"Not logged"',
+      );
+    }
+
     appendFileSync(
       logFilePath,
       `${timestamp} - [${logLevel.toUpperCase()}] ${message}\n`,
@@ -80,7 +87,7 @@ export class LoggerService extends ConsoleLogger {
     }
   }
 
-  private logWithLevel(level: LogLevel, message: any, trace?: string) {
+  private logWithLevel(level: LogLevel, message: string, trace?: string) {
     if (this.isEnabledLevel(level)) {
       this.logMessageToFile(level, message);
 
@@ -94,7 +101,7 @@ export class LoggerService extends ConsoleLogger {
 
   private createLogMethods() {
     LOG_LEVELS.forEach((level: LogLevel) => {
-      this[level] = (message: any, trace?: string) => {
+      this[level] = (message: string, trace?: string) => {
         this.logWithLevel(level, message, trace);
       };
     });

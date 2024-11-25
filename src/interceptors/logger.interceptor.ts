@@ -18,10 +18,6 @@ export class LoggerHttpInterceptor implements NestInterceptor {
     const response = httpContext.getResponse();
     const { url, body, query, method } = request;
 
-    if ('password' in body) {
-      body.password = 'Not logged';
-    }
-
     return next.handle().pipe(
       tap((data) => {
         const bodyPart = `body: ${JSON.stringify(body)}`;
