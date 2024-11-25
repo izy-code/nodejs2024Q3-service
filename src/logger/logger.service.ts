@@ -9,6 +9,7 @@ const LOGS_DIR_PATH = '../../logs';
 const COMMON_LOG_FILE_NAME = 'common.log';
 const ERROR_LOG_FILE_NAME = 'error.log';
 const LOG_LEVELS = ['verbose', 'debug', 'log', 'warn', 'error', 'fatal'];
+const SENSITIVE_FIELDS = ['password', 'oldPassword', 'newPassword'];
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
@@ -62,12 +63,12 @@ export class LoggerService extends ConsoleLogger {
 
     mkdirSync(dirname(logFilePath), { recursive: true });
 
-    if (message.includes('"password":')) {
-      message = message.replace(
-        /"password":"[^"]+"/,
-        '"password":"Not logged"',
-      );
-    }
+    SENSITIVE_FIELDS.forEach((field) => {
+      if (message.includes(`"${field}":`)) {
+        const regex = new RegExp(`"${field}":"[^"]+"`, 'g');
+        message = message.replace(regex, `"${field}":"Not logged"`);
+      }
+    });
 
     appendFileSync(
       logFilePath,
