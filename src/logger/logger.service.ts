@@ -9,6 +9,7 @@ const LOGS_DIR_PATH = '../../logs';
 const COMMON_LOG_FILE_NAME = 'common.log';
 const ERROR_LOG_FILE_NAME = 'error.log';
 const LOG_LEVELS = ['verbose', 'debug', 'log', 'warn', 'error', 'fatal'];
+const SENSITIVE_FIELDS = ['password', 'oldPassword', 'newPassword'];
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
@@ -62,6 +63,13 @@ export class LoggerService extends ConsoleLogger {
 
     mkdirSync(dirname(logFilePath), { recursive: true });
 
+    SENSITIVE_FIELDS.forEach((field) => {
+      if (message.includes(`"${field}":`)) {
+        const regex = new RegExp(`"${field}":"[^"]+"`, 'g');
+        message = message.replace(regex, `"${field}":"Not logged"`);
+      }
+    });
+
     appendFileSync(
       logFilePath,
       `${timestamp} - [${logLevel.toUpperCase()}] ${message}\n`,
@@ -80,7 +88,7 @@ export class LoggerService extends ConsoleLogger {
     }
   }
 
-  private logWithLevel(level: LogLevel, message: any, trace?: string) {
+  private logWithLevel(level: LogLevel, message: string, trace?: string) {
     if (this.isEnabledLevel(level)) {
       this.logMessageToFile(level, message);
 
@@ -94,7 +102,7 @@ export class LoggerService extends ConsoleLogger {
 
   private createLogMethods() {
     LOG_LEVELS.forEach((level: LogLevel) => {
-      this[level] = (message: any, trace?: string) => {
+      this[level] = (message: string, trace?: string) => {
         this.logWithLevel(level, message, trace);
       };
     });
