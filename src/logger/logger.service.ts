@@ -3,7 +3,7 @@ import { mkdirSync, appendFileSync, statSync, renameSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 
 const BYTES_IN_KB = 1024;
-const DEFAULT_MAX_FILE_SIZE = 8 * BYTES_IN_KB;
+const DEFAULT_MAX_FILE_SIZE_KB = 8 * BYTES_IN_KB;
 const DEFAULT_LOG_LEVEL = 'log';
 const LOGS_DIR_PATH = '../../logs';
 const COMMON_LOG_FILE_NAME = 'common.log';
@@ -29,8 +29,8 @@ export class LoggerService extends ConsoleLogger {
     );
     this.errorLogFilePath = join(__dirname, LOGS_DIR_PATH, ERROR_LOG_FILE_NAME);
     this.maxFileSize =
-      parseInt(process.env.MAX_FILE_SIZE) * BYTES_IN_KB ||
-      DEFAULT_MAX_FILE_SIZE;
+      parseInt(process.env.MAX_FILE_SIZE_KB) * BYTES_IN_KB ||
+      DEFAULT_MAX_FILE_SIZE_KB;
 
     console.log(
       'Showing messages with log level less than or equal to:',
