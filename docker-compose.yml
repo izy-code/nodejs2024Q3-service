@@ -16,7 +16,7 @@ services:
       - hls-network
 
   backend:
-    image: izydock/hls-backend:latest
+    image: izydock/hls-backend-with-auth:latest
     depends_on:
       - postgres
     # build:
@@ -29,6 +29,7 @@ services:
       - .env
     volumes:
       - ./src:/app/src
+      - ./logs:/app/logs
     networks:
       - hls-network
 
